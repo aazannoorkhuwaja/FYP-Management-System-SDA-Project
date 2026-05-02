@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>FYP Architecture — Generative Blueprint</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+  <style>
+    body { margin: 0; background: #0D0F14; overflow: hidden; display: flex; align-items: center; justify-content: center; height: 100vh; font-family: 'JetBrains Mono', monospace; }
+    #label { position: absolute; bottom: 40px; left: 40px; color: #E8EAF0; font-size: 12px; letter-spacing: 0.2em; opacity: 0.5; }
+    canvas { border: 1px solid #252A3A; }
+  </style>
+</head>
+<body>
+  <div id="label">SYSTEM SCHEMATIC // ALGORITHMIC GENERATION // CS-FYP-MP</div>
+  <script>
+    let nodes = [];
+    let connections = [];
+    const nodeCount = 18;
+    const colors = ['#D94F2E', '#3B8FCC', '#E8EAF0', '#7A8099'];
+
+    function setup() {
+      createCanvas(windowWidth - 100, windowHeight - 100);
+      background('#0D0F14');
+      
+      // Initialize Nodes
+      for(let i=0; i<nodeCount; i++) {
+        nodes.push({
+          x: random(width * 0.2, width * 0.8),
+          y: random(height * 0.2, height * 0.8),
+          targetX: random(width * 0.1, width * 0.9),
+          targetY: random(height * 0.1, height * 0.9),
+          size: random(4, 12),
+          color: random(colors),
+          label: 'ID-' + floor(random(1000, 9999))
+        });
+      }
+
+      // Initialize Connections
+      for(let i=0; i<nodes.length; i++) {
+        for(let j=i+1; j<nodes.length; j++) {
+          if(dist(nodes[i].x, nodes[i].y, nodes[j].x, nodes[j].y) < 250) {
+            connections.push([i, j]);
+          }
+        }
+      }
+    }
+
+    function draw() {
+      background(13, 15, 20, 15); // Motion blur effect
+
+      // Draw Grid
+      stroke(37, 42, 58, 50);
+      strokeWeight(1);
+      for(let x=0; x<width; x+=50) line(x, 0, x, height);
+      for(let y=0; y<height; y+=50) line(0, y, width, y);
+
+      // Update and Draw Connections
+      strokeWeight(0.5);
+      connections.forEach(conn => {
+        let n1 = nodes[conn[0]];
+        let n2 = nodes[conn[1]];
+        let d = dist(n1.x, n1.y, n2.x, n2.y);
+        stroke(122, 128, 153, map(d, 0, 300, 100, 0));
+        line(n1.x, n1.y, n2.x, n2.y);
+      });
+
+      // Update and Draw Nodes
+      nodes.forEach(n => {
+        // Subtle drift
+        n.x = lerp(n.x, n.targetX, 0.005);
+        n.y = lerp(n.y, n.targetY, 0.005);
+        
+        if(dist(n.x, n.y, n.targetX, n.targetY) < 1) {
+          n.targetX = random(width * 0.1, width * 0.9);
+          n.targetY = random(height * 0.1, height * 0.9);
+        }
+
+        fill(n.color);
+        noStroke();
+        rect(n.x - n.size/2, n.y - n.size/2, n.size, n.size);
+        
+        if(n.color === '#D94F2E') {
+          noFill();
+          stroke('#D94F2E');
+          rect(n.x - n.size, n.y - n.size, n.size*2, n.size*2);
+        }
+
+        fill(232, 234, 240, 100);
+        textSize(8);
+        text(n.label, n.x + 10, n.y + 3);
+      });
+
+      // Frame Border
+      noFill();
+      stroke(37, 42, 58);
+      strokeWeight(20);
+      rect(0, 0, width, height);
+    }
+
+    function windowResized() {
+      resizeCanvas(windowWidth - 100, windowHeight - 100);
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FYP Management Platform | Dashboard</title>
+  <link rel="stylesheet" href="design_system.css">
+  <style>
+    /* Page Specific Overrides */
+    .nav-item {
+      padding: var(--s-3) 0;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: var(--s-3);
+      transition: var(--t-fast);
+      border-left: 2px solid transparent;
+      padding-left: var(--s-2);
+      margin-left: calc(-1 * var(--s-2));
+    }
+    .nav-item:hover, .nav-item.active {
+      color: var(--text);
+    }
+    .nav-item.active {
+      border-color: var(--accent);
+      background: linear-gradient(90deg, rgba(217, 79, 46, 0.05) 0%, transparent 100%);
+    }
+
+    .stat-card {
+      grid-column: span 3;
+    }
+    .main-project-card {
+      grid-column: span 8;
+    }
+    .sidebar-info-card {
+      grid-column: span 4;
+    }
+
+    .timeline {
+      position: relative;
+      padding-left: var(--s-6);
+      border-left: 1px solid var(--border);
+    }
+    .timeline-item {
+      margin-bottom: var(--s-6);
+      position: relative;
+    }
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: calc(-1 * var(--s-6) - 5px);
+      top: 5px;
+      width: 9px;
+      height: 9px;
+      background: var(--bg);
+      border: 2px solid var(--border);
+      border-radius: 50%;
+    }
+    .timeline-item.active::before {
+      border-color: var(--accent);
+      background: var(--accent);
+    }
+
+    .role-indicator {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: var(--s-1);
+    }
+  </style>
+</head>
+<body>
+
+  <aside class="sidebar">
+    <div class="role-indicator">System Registry</div>
+    <h2 style="margin-bottom: var(--s-8);">FYP.MP</h2>
+    
+    <nav style="flex: 1;">
+      <a href="#" class="nav-item active">Dashboard</a>
+      <a href="#" class="nav-item">Proposals</a>
+      <a href="#" class="nav-item">Supervision</a>
+      <a href="#" class="nav-item">Milestones</a>
+      <a href="#" class="nav-item">Peer Review</a>
+      <a href="#" class="nav-item">Documents</a>
+    </nav>
+
+    <div class="card" style="padding: var(--s-3); border-color: var(--surface-2); background: transparent;">
+      <div style="font-size: 12px; color: var(--text-muted);">Authenticated as</div>
+      <div style="font-size: 14px; font-weight: 500;">Aazan Noor</div>
+      <div class="mono" style="font-size: 11px; color: var(--accent);">24P-0706</div>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <header style="margin-bottom: var(--s-12); display: flex; justify-content: space-between; align-items: flex-end;">
+      <div>
+        <div class="text-muted" style="margin-bottom: var(--s-1);">Academic Year 2025–2026</div>
+        <h1>Project Overview</h1>
+      </div>
+      <div style="display: flex; gap: var(--s-3);">
+        <button class="btn btn-outline">Archive Search</button>
+        <button class="btn btn-primary">Submit Proposal</button>
+      </div>
+    </header>
+
+    <div class="grid-dashboard">
+      <!-- Stats Row -->
+      <div class="card stat-card">
+        <div class="text-muted" style="font-size: 12px;">Active Phase</div>
+        <div class="heading-serif" style="font-size: 32px;">Development</div>
+      </div>
+      <div class="card stat-card">
+        <div class="text-muted" style="font-size: 12px;">Completion</div>
+        <div class="heading-serif" style="font-size: 32px;">64%</div>
+      </div>
+      <div class="card stat-card">
+        <div class="text-muted" style="font-size: 12px;">Tasks Pending</div>
+        <div class="heading-serif" style="font-size: 32px;">03</div>
+      </div>
+      <div class="card stat-card">
+        <div class="text-muted" style="font-size: 12px;">Peer Rank</div>
+        <div class="heading-serif" style="font-size: 32px;">Top 10%</div>
+      </div>
+
+      <!-- Main Content Row -->
+      <div class="card main-project-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--s-6);">
+          <h2 class="heading-serif">Distributed Ledger for Academic Veracity</h2>
+          <span class="badge badge-success">Approved</span>
+        </div>
+        <p class="text-muted" style="margin-bottom: var(--s-6);">
+          Implementing a localized blockchain solution to secure student transcripts and project repositories within the university intranet.
+        </p>
+        
+        <div style="display: flex; gap: var(--s-12); border-top: 1px solid var(--border); padding-top: var(--s-6);">
+          <div>
+            <div class="text-muted" style="font-size: 11px; text-transform: uppercase;">Supervisor</div>
+            <div style="font-weight: 500;">Dr. Umer Khan</div>
+          </div>
+          <div>
+            <div class="text-muted" style="font-size: 11px; text-transform: uppercase;">Domain</div>
+            <div style="font-weight: 500;">Cybersecurity</div>
+          </div>
+          <div>
+            <div class="text-muted" style="font-size: 11px; text-transform: uppercase;">Group ID</div>
+            <div class="mono" style="font-weight: 500;">CS-2025-G14</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card sidebar-info-card">
+        <h3 class="heading-serif" style="margin-bottom: var(--s-6);">Milestone Timeline</h3>
+        <div class="timeline">
+          <div class="timeline-item">
+            <div style="font-size: 13px; font-weight: 500;">Proposal Submission</div>
+            <div class="text-muted" style="font-size: 11px;">Completed Oct 12</div>
+          </div>
+          <div class="timeline-item">
+            <div style="font-size: 13px; font-weight: 500;">Literature Review</div>
+            <div class="text-muted" style="font-size: 11px;">Completed Nov 05</div>
+          </div>
+          <div class="timeline-item active">
+            <div style="font-size: 13px; font-weight: 500;">Architecture Design</div>
+            <div class="text-accent" style="font-size: 11px;">Current Phase — Due Dec 15</div>
+          </div>
+          <div class="timeline-item">
+            <div style="font-size: 13px; font-weight: 500;">First Prototype</div>
+            <div class="text-muted" style="font-size: 11px;">Scheduled Feb 01</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script>
+    console.log("FYP.MP Dashboard initialized with Monolithic Serenity tokens.");
+  </script>
+</body>
+</html>

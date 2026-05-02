@@ -1,0 +1,14 @@
+# Large files
+*.tar.gz
+*.zip
+*.jar
+
+# IDE files
+.claude/
+.codex/
+.github/
+
+# Build artifacts
+bin/
+out/
+target/
