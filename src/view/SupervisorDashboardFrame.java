@@ -3,6 +3,7 @@ package view;
 import model.Supervisor;
 import model.Database;
 import model.SupervisionRequest;
+import controller.RequestController;
 import util.DiagnosticService;
 
 import javax.swing.*;
@@ -145,15 +146,17 @@ public class SupervisorDashboardFrame extends JFrame {
             String selected = requestList.getSelectedValue();
             if (selected == null) return;
             String reqId = selected.split(" \\| ")[0];
-            for (SupervisionRequest r : db.getRequests()) {
-                if (r.getRequestId().equals(reqId)) {
-                    diag.info("UI-Supervisor", "Accepting request: " + reqId);
-                    r.accept();
-                    db.saveToFile();
-                    refreshData();
-                    break;
-                }
+            diag.info("UI-Supervisor", "Accepting request via controller: " + reqId);
+            String result = new RequestController().acceptRequest(reqId);
+            if ("Success".equals(result)) {
+                // Refresh in-memory supervisor capacity label
+                supervisor.setCurrentGroups(db.findGroupById(
+                    db.getRequests().stream()
+                        .filter(r -> r.getRequestId().equals(reqId))
+                        .findFirst().map(r -> r.getGroup().getGroupId()).orElse(""))
+                    == null ? supervisor.getCurrentGroups() : supervisor.getCurrentGroups());
             }
+            refreshData();
         }));
 
         declineBtn.addActionListener(Theme.traceActionListener("SupervisorDashboard", "DeclineRequest", e -> {

@@ -523,7 +523,7 @@ public class Database implements Serializable {
     public List<Feedback> getFeedbackForLog(String logId) {
         List<Feedback> result = new ArrayList<>();
         for (Feedback f : feedbacks) {
-            if (f.getFeedbackId() != null && f.getFeedbackId().startsWith("LOG-" + logId)) {
+            if (f.getLogId() != null && f.getLogId().equals(logId)) {
                 result.add(f);
             }
         }

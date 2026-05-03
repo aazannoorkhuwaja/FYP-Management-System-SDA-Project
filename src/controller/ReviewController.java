@@ -23,8 +23,18 @@ public class ReviewController {
             return "Error: Cannot review yourself.";
         }
 
+        model.User reviewer = db.findUserById(reviewerId);
+        model.User reviewee = db.findUserById(revieweeId);
+
+        if (!(reviewer instanceof Student)) {
+            return "Error: Reviewer is not a student.";
+        }
+        if (!(reviewee instanceof Student)) {
+            return "Error: Reviewee is not a student.";
+        }
+
         String reviewId = "PR" + System.currentTimeMillis();
-        PeerReview review = new PeerReview(reviewId, (Student) db.findUserById(reviewerId), (Student) db.findUserById(revieweeId), Map.of("rating", rating));
+        PeerReview review = new PeerReview(reviewId, (Student) reviewer, (Student) reviewee, Map.of("rating", rating));
         review.submit();
         db.getPeerReviews().add(review);
         db.saveToFile();

@@ -51,10 +51,11 @@ public class GradeController {
             return "Error: Marks must be between 0 and 100.";
         }
 
-        Student student = (Student) db.findUserById(studentId);
-        if (student == null) {
-            return "Error: Student not found.";
+        model.User userFound = db.findUserById(studentId);
+        if (!(userFound instanceof Student)) {
+            return "Error: User not found or is not a student.";
         }
+        Student student = (Student) userFound;
 
         String gradeId = "GR" + System.currentTimeMillis();
         String groupId = student.getGroup() != null ? student.getGroup().getGroupId() : "";
