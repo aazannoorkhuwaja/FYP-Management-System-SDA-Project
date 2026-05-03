@@ -7,11 +7,21 @@
 .claude/
 .codex/
 .github/
+.idea/
+*.iml
+.vscode/
 
 # Build artifacts
 bin/
 out/
 target/
 *.class
-*.dat
-*.log
+
+# Logs and Data
+logs/
+data/*.dat
+data/*.bak
+data/*.log
+
+# Temporary reorganization scripts
+reorganize.sh
