@@ -12,3 +12,6 @@
 bin/
 out/
 target/
+*.class
+*.dat
+*.log
