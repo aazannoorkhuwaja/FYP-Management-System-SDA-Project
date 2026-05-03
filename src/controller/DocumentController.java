@@ -65,6 +65,20 @@ public class DocumentController {
         return db.getDocumentsForGroup(groupId);
     }
 
+    /**
+     * FR-13: Returns ALL document versions for a group (no deduplication).
+     * Use this for version history display.
+     */
+    public List<Document> getAllDocumentsForGroup(String groupId) {
+        List<Document> result = new ArrayList<>();
+        for (Document d : db.getDocuments()) {
+            if (groupId != null && groupId.equals(d.getGroupId())) {
+                result.add(d);
+            }
+        }
+        return result;
+    }
+
     public List<Document> getVersionHistory(String documentId) {
         return db.getDocumentVersions(documentId);
     }

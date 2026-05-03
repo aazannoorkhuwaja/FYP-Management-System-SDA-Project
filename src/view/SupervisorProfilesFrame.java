@@ -45,7 +45,7 @@ public class SupervisorProfilesFrame extends JFrame {
                     s.getUserId(),
                     s.getName(),
                     String.join(", ", s.getResearchAreas()),
-                    String.format("%.1f", s.getAvgResponseTime()),
+                    String.format("%.1f", controller.RequestController.getAverageResponseTime(s.getUserId())),
                     s.getCurrentGroups() + " / " + s.getMaxGroups()
                 };
                 model.addRow(row);

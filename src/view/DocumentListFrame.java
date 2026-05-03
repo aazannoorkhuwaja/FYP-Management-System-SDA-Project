@@ -91,8 +91,9 @@ public class DocumentListFrame extends JFrame {
         if (group == null) return;
 
         DocumentController dc = new DocumentController();
+        // FR-13: use getAllDocumentsForGroup to find ALL versions, not just latest
         String documentId = null;
-        for (Document d : dc.getDocumentsForGroup(group.getGroupId())) {
+        for (Document d : dc.getAllDocumentsForGroup(group.getGroupId())) {
             if (d.getFileName().equals(fileName)) {
                 documentId = d.getDocumentId();
                 break;
@@ -118,6 +119,6 @@ public class DocumentListFrame extends JFrame {
         scroll.setPreferredSize(new Dimension(450, 300));
         Theme.styleScrollPane(scroll);
         
-        JOptionPane.showMessageDialog(this, scroll, "History: " + fileName, JOptionPane.PLAIN_MESSAGE);
+        JOptionPane.showMessageDialog(this, scroll, "History: " + fileName + " (" + versions.size() + " version(s))", JOptionPane.PLAIN_MESSAGE);
     }
 }

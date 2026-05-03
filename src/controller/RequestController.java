@@ -47,7 +47,14 @@ public class RequestController {
                 Supervisor s = findSupervisor(r.getSupervisor().getUserId());
                 if (s != null) {
                     s.setCurrentGroups(s.getCurrentGroups() + 1);
-                    updateResponseTime(s, r);
+                    
+                    // FR-10 / UC-02: Notify student
+                    if (g != null && !g.getMembers().isEmpty()) {
+                        String msg = "Your request to " + s.getName() + " was accepted!";
+                        model.Notification notif = new model.Notification("N" + System.currentTimeMillis(),
+                                g.getMembers().get(0).getUserId(), "RequestUpdate", msg);
+                        db.getNotifications().add(notif);
+                    }
                 }
                 db.saveToFile();
                 return "Success";
@@ -63,7 +70,14 @@ public class RequestController {
                 r.decline(reason);
                 Supervisor s = findSupervisor(r.getSupervisor().getUserId());
                 if (s != null) {
-                    updateResponseTime(s, r);
+                    // FR-10 / UC-02: Notify student
+                    ProjectGroup g = r.getGroup();
+                    if (g != null && g.getMembers() != null && !g.getMembers().isEmpty()) {
+                        String msg = "Request declined by " + s.getName() + ": " + reason;
+                        model.Notification notif = new model.Notification("N" + System.currentTimeMillis(),
+                                g.getMembers().get(0).getUserId(), "RequestUpdate", msg);
+                        db.getNotifications().add(notif);
+                    }
                 }
                 db.saveToFile();
                 return "Success";
@@ -72,11 +86,21 @@ public class RequestController {
         return "Error: Request not found.";
     }
 
-    private void updateResponseTime(Supervisor s, SupervisionRequest r) {
-        long deltaMillis = r.getResponseDate() - r.getRequestDate();
-        float deltaHours = deltaMillis / (1000.0f * 60 * 60);
-        float currentAvg = s.getAvgResponseTime();
-        s.setAvgResponseTime(currentAvg == 0 ? deltaHours : (currentAvg + deltaHours) / 2.0f);
+    // FR-03: Static calculation of average response time
+    public static float getAverageResponseTime(String supervisorId) {
+        Database db = Database.getInstance();
+        long totalMillis = 0;
+        int count = 0;
+        for (SupervisionRequest r : db.getRequests()) {
+            if (r.getSupervisor() != null && r.getSupervisor().getUserId().equals(supervisorId)) {
+                if (!"Pending".equals(r.getStatus()) && r.getResponseDate() > 0 && r.getRequestDate() > 0) {
+                    totalMillis += (r.getResponseDate() - r.getRequestDate());
+                    count++;
+                }
+            }
+        }
+        if (count == 0) return 0f;
+        return (float) (totalMillis / (1000.0 * 60 * 60 * count)); // in hours
     }
 
     private Supervisor findSupervisor(String supervisorId) {

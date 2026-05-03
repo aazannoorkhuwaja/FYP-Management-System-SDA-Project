@@ -101,6 +101,7 @@ public class Database implements Serializable {
                         "java.util.ArrayList", "java.util.Arrays$ArrayList", "java.util.HashMap", "java.util.Date",
                         "java.lang.Integer", "java.lang.String", "java.lang.Float", "java.lang.Double",
                         "java.lang.Boolean",
+                        "java.util.CollSer", "java.util.ImmutableCollections$List12", "java.util.ImmutableCollections$ListN",
                         "[Ljava.lang.String;");
                 if (!whitelist.contains(name) && !name.startsWith("java.lang.")) {
                     throw new InvalidClassException("Unauthorized deserialization attempt", name);
@@ -629,6 +630,25 @@ public class Database implements Serializable {
                 }
             }
         }
+    }
+
+    // FR-16: Get list of inactive groups for UI display
+    public List<ProjectGroup> getInactiveGroups(int thresholdDays) {
+        List<ProjectGroup> inactive = new ArrayList<>();
+        for (ProjectGroup g : groups) {
+            ProgressLog latest = getLatestLogForGroup(g.getGroupId());
+            long daysPassed = 0;
+            if (latest == null || latest.getSubmittedDate() == null) {
+                daysPassed = thresholdDays + 1; // assume overdue if no logs submitted yet
+            } else {
+                long diffMs = System.currentTimeMillis() - latest.getSubmittedDate().getTime();
+                daysPassed = diffMs / (1000 * 60 * 60 * 24);
+            }
+            if (daysPassed > thresholdDays) {
+                inactive.add(g);
+            }
+        }
+        return inactive;
     }
 
     public void checkAndAlertPendingRequests(int thresholdDays) {

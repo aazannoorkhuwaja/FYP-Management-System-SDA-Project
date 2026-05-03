@@ -31,8 +31,9 @@ public class ProposalController {
         String proposalId = "P" + System.currentTimeMillis();
         FYPProposal proposal = new FYPProposal(proposalId, title, domain, abstractText, "Pending Review", group);
 
-        if (db.isDuplicateProposal(title, null)) {
-            return "Error: A proposal with this title already exists.";
+        // FR-08: check both existing proposals AND archive for duplicate title
+        if (proposal.checkDuplicate(db.getProposals()) || db.isDuplicateProposal(title, proposalId)) {
+            return "Error: A proposal with this title already exists in proposals or archive. Please revise.";
         }
 
         proposal.submit();

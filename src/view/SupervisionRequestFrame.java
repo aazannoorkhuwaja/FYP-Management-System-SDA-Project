@@ -56,7 +56,7 @@ public class SupervisionRequestFrame extends JFrame {
         for (model.User u : db.getUsers()) {
             if (u instanceof Supervisor) {
                 Supervisor s = (Supervisor) u;
-                supervisorCombo.addItem(s.getUserId() + " - " + s.getName() + " | Response: " + String.format("%.1f", s.getAvgResponseTime()) + "h | Capacity: " + s.getCurrentGroups() + "/" + s.getMaxGroups());
+                supervisorCombo.addItem(s.getUserId() + " - " + s.getName() + " | Response: " + String.format("%.1f", controller.RequestController.getAverageResponseTime(s.getUserId())) + "h | Capacity: " + s.getCurrentGroups() + "/" + s.getMaxGroups());
             }
         }
 
@@ -118,7 +118,10 @@ public class SupervisionRequestFrame extends JFrame {
         }
 
         for (SupervisionRequest r : db.getRequests()) {
-            if (r.getGroup().getGroupId().equals(group.getGroupId()) && r.getSupervisor().getUserId().equals(supervisor.getUserId()) && r.getStatus().equals("Pending")) {
+            if (r.getGroup() != null && r.getSupervisor() != null
+                    && r.getGroup().getGroupId().equals(group.getGroupId())
+                    && r.getSupervisor().getUserId().equals(supervisor.getUserId())
+                    && "Pending".equals(r.getStatus())) {
                 JOptionPane.showMessageDialog(this, "Request already pending.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }

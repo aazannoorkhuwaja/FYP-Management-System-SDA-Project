@@ -138,6 +138,9 @@ public class AdminDashboardFrame extends JFrame {
         add(mainPanel);
         pack();
         Theme.maximizeFrame(this);
+
+        // FR-16: Auto-check inactivity on load
+        checkInactivityAlerts();
     }
 
     private void addActionSection(JPanel host, String title, Object[][] actions) {
@@ -177,6 +180,19 @@ public class AdminDashboardFrame extends JFrame {
         card.add(v, BorderLayout.CENTER);
 
         return card;
+    }
+
+    private void checkInactivityAlerts() {
+        Database db = Database.getInstance();
+        java.util.List<model.ProjectGroup> inactive = db.getInactiveGroups(7);
+        if (!inactive.isEmpty()) {
+            StringBuilder sb = new StringBuilder("The following groups have not submitted logs in 7+ days:\n\n");
+            for (model.ProjectGroup g : inactive) {
+                sb.append("- ").append(g.getGroupId()).append("\n");
+            }
+            sb.append("\nConsider triggering Inactivity Alerts from the sidebar.");
+            JOptionPane.showMessageDialog(this, sb.toString(), "FR-16: Inactive Groups Detected", JOptionPane.WARNING_MESSAGE);
+        }
     }
 
     // Logic Methods (Preserved from original)

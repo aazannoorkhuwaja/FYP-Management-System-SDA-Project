@@ -148,13 +148,8 @@ public class SupervisorDashboardFrame extends JFrame {
             String reqId = selected.split(" \\| ")[0];
             diag.info("UI-Supervisor", "Accepting request via controller: " + reqId);
             String result = new RequestController().acceptRequest(reqId);
-            if ("Success".equals(result)) {
-                // Refresh in-memory supervisor capacity label
-                supervisor.setCurrentGroups(db.findGroupById(
-                    db.getRequests().stream()
-                        .filter(r -> r.getRequestId().equals(reqId))
-                        .findFirst().map(r -> r.getGroup().getGroupId()).orElse(""))
-                    == null ? supervisor.getCurrentGroups() : supervisor.getCurrentGroups());
+            if (!"Success".equals(result)) {
+                JOptionPane.showMessageDialog(this, result, "Error", JOptionPane.ERROR_MESSAGE);
             }
             refreshData();
         }));
@@ -163,17 +158,17 @@ public class SupervisorDashboardFrame extends JFrame {
             String selected = requestList.getSelectedValue();
             if (selected == null) return;
             String reason = JOptionPane.showInputDialog(this, "Enter rejection reason:");
-            if (reason == null) return;
-            String reqId = selected.split(" \\| ")[0];
-            for (SupervisionRequest r : db.getRequests()) {
-                if (r.getRequestId().equals(reqId)) {
-                    diag.info("UI-Supervisor", "Declining request: " + reqId + " Reason: " + reason);
-                    r.decline(reason);
-                    db.saveToFile();
-                    refreshData();
-                    break;
-                }
+            if (reason == null || reason.trim().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "A written reason is required to decline.", "Validation", JOptionPane.WARNING_MESSAGE);
+                return;
             }
+            String reqId = selected.split(" \\| ")[0];
+            diag.info("UI-Supervisor", "Declining request via controller: " + reqId + " Reason: " + reason);
+            String result = new RequestController().declineRequest(reqId, reason);
+            if (!"Success".equals(result)) {
+                JOptionPane.showMessageDialog(this, result, "Error", JOptionPane.ERROR_MESSAGE);
+            }
+            refreshData();
         }));
 
         requestActionPanel.add(declineBtn);

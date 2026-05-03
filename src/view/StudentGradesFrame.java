@@ -70,7 +70,8 @@ public class StudentGradesFrame extends JFrame {
             if (grade != null) {
                 sb.append("Student:  ").append(student.getName()).append("\n");
                 sb.append("Project:  ").append(group.getProjectTitle()).append("\n");
-                sb.append("Score:    ").append(String.format("%.1f", grade.getMarks())).append(" / 100\n");
+                sb.append("Score:    ").append((int) grade.getMarks()).append(" / 100\n");
+                sb.append("Grade ID: ").append(grade.getGradeId()).append("\n");
             } else {
                 sb.append("Status: Pending\nNo marks recorded yet.\n");
             }

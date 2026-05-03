@@ -56,4 +56,27 @@ public class ReviewController {
         }
         return members;
     }
+
+    /**
+     * NFR-09: Student-safe accessor — returns only reviews WHERE this student is
+     * the reviewee. Reviewer identity is never exposed. Students cannot call
+     * getReviewsForGroup() directly.
+     */
+    public List<PeerReview> getReviewsForStudent(String studentId) {
+        List<PeerReview> result = new ArrayList<>();
+        for (PeerReview r : db.getPeerReviews()) {
+            if (r.getReviewee() != null && r.getReviewee().getUserId().equals(studentId)) {
+                result.add(r);
+            }
+        }
+        return result;
+    }
+
+    /**
+     * NFR-09: Admin/supervisor full-access accessor — returns all reviews for a
+     * group including reviewer identity. Must NOT be called from student-facing views.
+     */
+    public List<PeerReview> getReviewsForAdmin(String groupId) {
+        return db.findReviewsForGroup(groupId);
+    }
 }

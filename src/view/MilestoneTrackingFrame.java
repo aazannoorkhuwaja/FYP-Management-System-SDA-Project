@@ -8,9 +8,7 @@ import model.Student;
 
 import javax.swing.*;
 import java.awt.*;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -52,23 +50,27 @@ public class MilestoneTrackingFrame extends JFrame {
         scroll.setPreferredSize(new Dimension(560, 260));
         panel.add(scroll, BorderLayout.CENTER);
 
-        // FR-12: Update Deadline button — enables updating a selected phase deadline
-        JPanel south = new JPanel(new FlowLayout(FlowLayout.CENTER, 12, 0));
+        // FR-12: Students view milestones read-only. Supervisors set deadlines via ProjectPhaseFrame.
+        JPanel south = new JPanel(new BorderLayout(0, 8));
         south.setOpaque(false);
+
+        JLabel readOnlyHint = new JLabel("Deadlines are set by your supervisor — view only.", SwingConstants.CENTER);
+        readOnlyHint.setFont(Theme.MONO_FONT);
+        readOnlyHint.setForeground(Theme.TEXT_MUTED);
+        south.add(readOnlyHint, BorderLayout.NORTH);
+
+        JPanel btnRow = new JPanel(new FlowLayout(FlowLayout.CENTER, 12, 0));
+        btnRow.setOpaque(false);
 
         JButton refreshBtn = Theme.createOutlineButton("↻ Refresh");
         refreshBtn.addActionListener(e -> loadPhases());
 
-        JButton updateDeadlineBtn = Theme.createPrimaryButton("Update Deadline");
-        updateDeadlineBtn.setToolTipText("Select a milestone above, then click to update its deadline.");
-        updateDeadlineBtn.addActionListener(e -> updateSelectedDeadline());
-
         JButton closeBtn = Theme.createOutlineButton("Close");
         closeBtn.addActionListener(e -> dispose());
 
-        south.add(refreshBtn);
-        south.add(updateDeadlineBtn);
-        south.add(closeBtn);
+        btnRow.add(refreshBtn);
+        btnRow.add(closeBtn);
+        south.add(btnRow, BorderLayout.CENTER);
         panel.add(south, BorderLayout.SOUTH);
 
         add(panel);
@@ -95,48 +97,6 @@ public class MilestoneTrackingFrame extends JFrame {
             String deadline = p.getDeadline() != null ? SDF.format(p.getDeadline()) : "TBD";
             String status = p.isCompleted() ? "[DONE]" : "[OPEN]";
             phaseListModel.addElement(String.format("%s %-20s | Deadline: %s", status, p.getPhaseName(), deadline));
-        }
-    }
-
-    /**
-     * FR-12: Update selected milestone deadline.
-     * Note: In a full deployment, this action would require supervisor role verification.
-     * Students can propose a new deadline which the supervisor must approve.
-     */
-    private void updateSelectedDeadline() {
-        int index = phaseList.getSelectedIndex();
-        if (index < 0 || loadedPhases == null || index >= loadedPhases.size()) {
-            JOptionPane.showMessageDialog(this, "Please select a milestone first.", "No Selection", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-
-        ProjectPhase selected = loadedPhases.get(index);
-        String currentDeadline = selected.getDeadline() != null ? SDF.format(selected.getDeadline()) : "";
-        String newDeadlineStr = (String) JOptionPane.showInputDialog(
-                this,
-                "Enter new deadline for \"" + selected.getPhaseName() + "\":",
-                "Update Deadline",
-                JOptionPane.PLAIN_MESSAGE,
-                null, null,
-                currentDeadline);
-
-        if (newDeadlineStr == null || newDeadlineStr.trim().isEmpty()) return;
-
-        Date newDeadline;
-        try {
-            newDeadline = SDF.parse(newDeadlineStr.trim());
-        } catch (ParseException ex) {
-            JOptionPane.showMessageDialog(this, "Invalid date format. Use YYYY-MM-DD.", "Format Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        PhaseController pc = new PhaseController();
-        String result = pc.updatePhase(selected.getPhaseId(), newDeadline);
-        if ("Success".equals(result)) {
-            JOptionPane.showMessageDialog(this, "Deadline updated successfully!");
-            loadPhases();
-        } else {
-            JOptionPane.showMessageDialog(this, result, "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 }

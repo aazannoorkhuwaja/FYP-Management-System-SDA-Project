@@ -124,7 +124,7 @@ public class ProfileFrame extends JFrame {
         } else if (user instanceof Supervisor) {
             Supervisor sv = (Supervisor) user;
             addInfoRow("Research Domain", sv.getResearchAreas() != null ? String.join(", ", sv.getResearchAreas()) : "None");
-            addInfoRow("Avg Response Time", String.format("%.1f hours", sv.getAvgResponseTime()));
+            addInfoRow("Avg Response Time", String.format("%.1f hours", controller.RequestController.getAverageResponseTime(sv.getUserId())));
             addInfoRow("Active Slots", sv.getCurrentGroups() + " / " + sv.getMaxGroups());
         }
 

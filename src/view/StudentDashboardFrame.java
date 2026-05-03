@@ -20,6 +20,7 @@ public class StudentDashboardFrame extends JFrame {
     private WorkspacePanel workspace;
     private JPanel bodyPanel;
     private JPanel statsPanel;
+    private JLabel groupLabel;
 
     public StudentDashboardFrame(Student student) {
         this.student = student;
@@ -51,24 +52,24 @@ public class StudentDashboardFrame extends JFrame {
                 Theme.traceActionListener("StudentDashboard", "Dashboard", e -> workspace.showHome()));
         Theme.addSidebarSectionLabel(sidebar, "Project");
         Theme.addSidebarButton(sidebar, "Proposals", Theme.traceActionListener("StudentDashboard", "Proposals",
-                e -> openModule("Proposals", () -> new SubmitProposalFrame(student))));
+                e -> openModule("Proposals", () -> new SubmitProposalFrame(this.student))));
         Theme.addSidebarButton(sidebar, "Supervision",
                 Theme.traceActionListener("StudentDashboard", "Supervision", e -> {
-                    if (student.getGroup() != null && student.getGroup().getSupervisor() != null) {
+                    if (this.student.getGroup() != null && this.student.getGroup().getSupervisor() != null) {
                         openModule("Current Supervision", () -> new SupervisorProfilesFrame());
                     } else {
-                        openModule("Supervision", () -> new SupervisionRequestFrame(student));
+                        openModule("Supervision", () -> new SupervisionRequestFrame(this.student));
                     }
                 }));
         Theme.addSidebarButton(sidebar, "Milestones", Theme.traceActionListener("StudentDashboard", "Milestones",
-                e -> openModule("Milestones", () -> new MilestoneTrackingFrame(student))));
+                e -> openModule("Milestones", () -> new MilestoneTrackingFrame(this.student))));
         Theme.addSidebarButton(sidebar, "Documents", Theme.traceActionListener("StudentDashboard", "Documents",
-                e -> openModule("Documents", () -> new DocumentListFrame(student))));
+                e -> openModule("Documents", () -> new DocumentListFrame(this.student))));
         Theme.addSidebarSectionLabel(sidebar, "People");
         Theme.addSidebarButton(sidebar, "Peer Review", Theme.traceActionListener("StudentDashboard", "PeerReview",
-                e -> openModule("Peer Review", () -> new PeerReviewFrame(student))));
+                e -> openModule("Peer Review", () -> new PeerReviewFrame(this.student))));
         Theme.addSidebarButton(sidebar, "Notifications", Theme.traceActionListener("StudentDashboard", "Notifications",
-                e -> openModule("Notifications", () -> new NotificationFrame(student))));
+                e -> openModule("Notifications", () -> new NotificationFrame(this.student))));
 
         sidebar.add(Box.createVerticalGlue());
         sidebar.add(Box.createVerticalStrut(10));
@@ -97,7 +98,7 @@ public class StudentDashboardFrame extends JFrame {
         Theme.styleLabel(welcomeLabel, true);
         headerPanel.add(welcomeLabel, BorderLayout.WEST);
 
-        JLabel groupLabel = new JLabel(
+        groupLabel = new JLabel(
                 student.getGroup() != null ? "Group: " + student.getGroup().getGroupId() : "No Group");
         groupLabel.setFont(Theme.MONO_FONT);
         groupLabel.setForeground(Theme.FAST_BLUE);
@@ -226,7 +227,20 @@ public class StudentDashboardFrame extends JFrame {
     private void refreshStats() {
         statsPanel.removeAll();
         Database db = Database.getInstance();
+
+        // FR-UX: Reload student from DB to get fresh group status
+        model.User freshUser = db.findUserById(student.getUserId());
+        if (freshUser instanceof Student) {
+            this.student = (Student) freshUser;
+        }
+
         ProjectGroup group = student.getGroup();
+
+        // Update title and group label
+        setTitle("FYP.MP | Student Dashboard - " + student.getName() + " (" + (group != null ? group.getGroupId() : "No Group") + ")");
+        if (groupLabel != null) {
+            groupLabel.setText(group != null ? "Group: " + group.getGroupId() : "No Group");
+        }
 
         int completedPhases = 0;
         int totalPhases = 0;
