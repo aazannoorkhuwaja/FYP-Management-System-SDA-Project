@@ -189,7 +189,7 @@ public class Database implements Serializable {
         ProjectGroup g6 = new ProjectGroup("G06", "Agile Management Tool", 0, sv6);
 
         // Students
-        Student s1 = new Student("S101", "Ammar Ahmed", "ammar@fast.edu", studentPass, Arrays.asList("Java", "ML"),
+        Student s1 = new Student("S101", "Aazan Noor Khuwaja", "aazan@fast.edu", studentPass, Arrays.asList("Java", "ML"),
                 "AI", g1, 0);
         Student s2 = new Student("S102", "Munesh Kumar", "munesh@fast.edu", studentPass,
                 Arrays.asList("Java", "Python"), "AI", g1, 0);
@@ -258,7 +258,7 @@ public class Database implements Serializable {
         documents.add(new Document("D02", "G01", "Literature_Review.docx", "Initial research", "data/docs/lit_rev.docx"));
 
         // Progress Logs
-        logs.add(new ProgressLog("L01", g1, 1, "Completed UI design", "Ammar worked on Backend, Munesh on Frontend", now));
+        logs.add(new ProgressLog("L01", g1, 1, "Completed UI design", "Aazan worked on Backend, Munesh on Frontend", now));
         logs.add(new ProgressLog("L02", g1, 2, "Integrated Database", "Both worked on SQL schemas", now));
 
         // Feedbacks
