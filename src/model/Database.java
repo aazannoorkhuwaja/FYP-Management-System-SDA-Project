@@ -131,7 +131,7 @@ public class Database implements Serializable {
         }
 
         User student = findUserByEmail("munesh@fast.edu");
-        String expectedStudentHash = User.hashPassword("student123");
+        String expectedStudentHash = User.hashPassword("pass123");
         boolean correctStudentPass = student != null && expectedStudentHash.equals(student.getHashedPassword());
 
         // Aggressive re-seed check: less than 15 users, missing SV06, no phases,
@@ -162,8 +162,8 @@ public class Database implements Serializable {
         listings.clear();
         phases.clear();
 
-        String studentPass = "student123";
-        String supervisorPass = "supervisor123";
+        String studentPass = "pass123";
+        String supervisorPass = "pass123";
         String adminPass = "admin123";
 
         // Supervisors
