@@ -187,6 +187,7 @@ public class Database implements Serializable {
         ProjectGroup g4 = new ProjectGroup("G04", "Facial Recognition System", 0, sv4);
         ProjectGroup g5 = new ProjectGroup("G05", "Big Data Analytics", 0, sv5);
         ProjectGroup g6 = new ProjectGroup("G06", "Agile Management Tool", 0, sv6);
+        ProjectGroup g7 = new ProjectGroup("G07", "Quantum Cryptography", 0, null);
 
         // Students
         Student s1 = new Student("S101", "Aazan Noor Khuwaja", "aazan@fast.edu", studentPass, Arrays.asList("Java", "ML"),
@@ -205,17 +206,20 @@ public class Database implements Serializable {
                 "Images", g4, 0);
         Student s8 = new Student("S108", "Ayesha Khan", "ayesha@fast.edu", studentPass, Arrays.asList("Python", "SQL"),
                 "Data", g5, 0);
+        Student s9 = new Student("S109", "Zara Ali", "zara@fast.edu", studentPass, Arrays.asList("Math", "Security"),
+                "Crypto", g7, 0);
 
         g1.addMember(s1);
         g1.addMember(s2);
         g2.addMember(s3);
+        g7.addMember(s9);
         // s4, s5, s6, s7, s8 left unassigned for demo purposes
 
         Admin a1 = new Admin("A01", "Admin User", "admin@fast.edu", adminPass, "A01");
 
         // Add to lists
-        users.addAll(Arrays.asList(s1, s2, s3, s4, s5, s6, s7, s8, sv1, sv2, sv3, sv4, sv5, sv6, a1));
-        groups.addAll(Arrays.asList(g1, g2, g3, g4, g5, g6));
+        users.addAll(Arrays.asList(s1, s2, s3, s4, s5, s6, s7, s8, s9, sv1, sv2, sv3, sv4, sv5, sv6, a1));
+        groups.addAll(Arrays.asList(g1, g2, g3, g4, g5, g6, g7));
 
         // Phases for G01 (Munesh's group)
         java.util.Date now = new java.util.Date();
@@ -238,6 +242,7 @@ public class Database implements Serializable {
         // Requests
         requests.add(new SupervisionRequest("R01", g3, sv3));
         requests.add(new SupervisionRequest("R02", g4, sv4));
+        requests.add(new SupervisionRequest("R03", g7, sv1));
 
         // Notifications
         notifications.add(new Notification("N01", "S102", "System", "Welcome to FYP Management Portal!"));
