@@ -19,6 +19,9 @@ A comprehensive Final Year Project (FYP) management platform built with Java Swi
 - **UC-01: Proposal Management**: Students can submit FYP proposals with duplicate title checking and domain classification.
 - **UC-02: Supervision Workflow**: Seamless request/response system between students and supervisors.
 - **UC-04: Peer Review System**: Private rating system for group members to ensure fair contribution assessment.
+- **Admin Oversight & Alerts**: Automated inactivity tracking for project groups (FR-16).
+- **Dynamic Metrics**: Real-time average response calculations for supervisors (FR-03).
+- **Secure Persistence**: SHA-256 hashed passwords and strict class whitelisting against deserialization vulnerabilities.
 - **Unified Dashboard**: Personalized interfaces for Students, Supervisors, and Administrators.
 
 ### 🎨 Design & Architecture
@@ -56,7 +59,7 @@ A comprehensive Final Year Project (FYP) management platform built with Java Swi
    ```
 2. Compile the source code:
    ```bash
-   javac -d bin src/Main.java src/model/*.java src/view/*.java src/controller/*.java
+   mkdir -p bin && find src -name "*.java" | xargs javac -d bin -cp src
    ```
 3. Run the application:
    ```bash
@@ -70,6 +73,7 @@ A comprehensive Final Year Project (FYP) management platform built with Java Swi
 | Role | Email | Password |
 |------|-------|----------|
 | **Student** | `aazan@fast.edu` | `pass123` |
+| **Student** | `munesh@fast.edu` | `pass123` |
 | **Supervisor** | `umer@fast.edu` | `pass123` |
 | **Admin** | `admin@fast.edu` | `admin123` |
 
